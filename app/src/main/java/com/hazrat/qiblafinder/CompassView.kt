@@ -38,17 +38,12 @@ fun CompassView(qiblaDirection: Float, currentDirection: Float) {
     val needleBitmap = remember { drawableToBitmap(context, R.drawable.needles).asImageBitmap() }
 
     // Define a tolerance range for the Qibla direction
-    val tolerance = 30f // Adjusted tolerance range
+    val minTolerance = 3.1f // Adjusted tolerance range
+    val maxTolerance = 3.4f // Adjusted tolerance range
 
     // Calculate difference between current and Qibla direction for debug purposes
-    val directionDifference = qiblaDirection - currentDirection
-    val isFacingQibla = abs(directionDifference) < tolerance
-
-    // Debug print statements
-    println("Current Direction: $currentDirection")
-    println("Qibla Direction: $qiblaDirection")
-    println("Direction Difference: $directionDifference")
-    println("Is Facing Qibla: $isFacingQibla")
+    val directionDifference = qiblaDirection / currentDirection
+    val isFacingQibla = abs(directionDifference) < maxTolerance && abs(directionDifference) > minTolerance
 
     Column (
         modifier = Modifier
