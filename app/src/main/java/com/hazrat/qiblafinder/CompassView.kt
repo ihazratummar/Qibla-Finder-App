@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,14 +28,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import kotlin.math.abs
 
 @Composable
 fun CompassView(qiblaDirection: Float, currentDirection: Float) {
     val context = LocalContext.current
     val compassBgBitmap = remember { drawableToBitmap(context, R.drawable.compass3).asImageBitmap() }
-    val qiblaIconBitmap = remember { drawableToBitmap(context, R.drawable.qibla_icon).asImageBitmap() }
+    val qiblaIconBitmap = remember { drawableToBitmap(context, R.drawable.qiblaicon).asImageBitmap() }
     val needleBitmap = remember { drawableToBitmap(context, R.drawable.needles).asImageBitmap() }
 
+    // Define a tolerance range for the Qibla direction
+    val tolerance = 30f // Adjusted tolerance range
+
+    // Calculate difference between current and Qibla direction for debug purposes
+    val directionDifference = qiblaDirection - currentDirection
+    val isFacingQibla = abs(directionDifference) < tolerance
+
+    // Debug print statements
+    println("Current Direction: $currentDirection")
+    println("Qibla Direction: $qiblaDirection")
+    println("Direction Difference: $directionDifference")
+    println("Is Facing Qibla: $isFacingQibla")
 
     Column (
         modifier = Modifier
@@ -43,10 +57,19 @@ fun CompassView(qiblaDirection: Float, currentDirection: Float) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Icon(
-            imageVector = Icons.Default.ArrowDropDown,
-            contentDescription = null,
-        )
+        if (isFacingQibla) {
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = null,
+                tint = Color.Red
+            )
+        }
+
         Spacer(modifier = Modifier.height(10.dp))
         Box(
             modifier = Modifier
