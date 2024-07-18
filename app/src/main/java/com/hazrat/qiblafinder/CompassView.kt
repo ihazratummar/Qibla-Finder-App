@@ -1,9 +1,8 @@
 package com.hazrat.qiblafinder
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,57 +11,97 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
-import kotlin.math.abs
 
 @Composable
-fun CompassView(qiblaDirection: Float, currentDirection: Float) {
+fun CompassView(
+    modifier: Modifier = Modifier,
+    qiblaDirection: Float, currentDirection: Float
+) {
     val context = LocalContext.current
-    val compassBgBitmap = remember { drawableToBitmap(context, R.drawable.compass3).asImageBitmap() }
-    val qiblaIconBitmap = remember { drawableToBitmap(context, R.drawable.qiblaicon).asImageBitmap() }
+    val compassBgBitmap =
+        remember { drawableToBitmap(context, R.drawable.compass3).asImageBitmap() }
+    val qiblaIconBitmap =
+        remember { drawableToBitmap(context, R.drawable.qiblaicon).asImageBitmap() }
     val needleBitmap = remember { drawableToBitmap(context, R.drawable.needles).asImageBitmap() }
 
-    // Define a tolerance range for the Qibla direction
     val minTolerance = 3.1f // Adjusted tolerance range
     val maxTolerance = 3.4f // Adjusted tolerance range
 
-    // Calculate difference between current and Qibla direction for debug purposes
-    val directionDifference = qiblaDirection / currentDirection
-    val isFacingQibla = abs(directionDifference) < maxTolerance && abs(directionDifference) > minTolerance
+    val directionDifference = qiblaDirection - currentDirection
+    val normalizedDifference = (directionDifference + 360) % 360
 
-    Column (
+    val isFacingQibla = (
+            (normalizedDifference in 0.0..maxTolerance.toDouble()) ||
+                    (normalizedDifference >= 360 - minTolerance && normalizedDifference <= 360)
+            )
+
+    var hasVibrated by remember { mutableStateOf(false) }
+
+    // Vibrate when facing Qibla and not already vibrated
+    if (isFacingQibla && !hasVibrated) {
+        vibrateDevice(context)
+        hasVibrated = true // Set to true to prevent continuous vibration
+    } else if (!isFacingQibla) {
+        hasVibrated = false // Reset when not facing Qibla
+    }
+
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         if (isFacingQibla) {
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = null,
-            )
+            Card(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(20.dp)
+                    .shadow(
+                        elevation = 5.dp,
+                        ambientColor = Color.Cyan,
+                        spotColor = Color.Cyan
+                    )
+                    .background(
+                        color = Color(0xff01716a),
+                        shape = CircleShape
+                    ),
+                shape = CircleShape,
+                border = BorderStroke(1.dp, color = Color(0xff01716a)),
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+            ) {
+
+            }
         } else {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                tint = Color.Red
-            )
+            Card(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(20.dp),
+                shape = CircleShape,
+                border = BorderStroke(1.dp, color = Color.Black),
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+            ) {
+
+            }
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -102,11 +141,12 @@ fun CompassView(qiblaDirection: Float, currentDirection: Float) {
 
                 // Draw the Qibla direction needle
                 rotate(degrees = qiblaDirection - currentDirection, pivot = compassCenter) {
+                    val needleStartY = compassCenter.y - needleBitmap.height / 1.1f
                     drawImage(
                         image = needleBitmap,
                         topLeft = Offset(
                             compassCenter.x - needleBitmap.width / 2,
-                            compassCenter.y - compassRadius + 110  - needleBitmap.height / 25
+                            needleStartY
                         )
                     )
 
@@ -116,7 +156,7 @@ fun CompassView(qiblaDirection: Float, currentDirection: Float) {
                         topLeft = Offset(
                             compassCenter.x - qiblaIconBitmap.width / 2,
                             compassCenter.y - compassRadius - qiblaIconBitmap.height / 1
-                        )
+                        ),
                     )
                 }
             }
@@ -124,7 +164,5 @@ fun CompassView(qiblaDirection: Float, currentDirection: Float) {
     }
 }
 
-fun drawableToBitmap(context: Context, drawableId: Int): Bitmap {
-    val drawable: Drawable = ContextCompat.getDrawable(context, drawableId)!!
-    return drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
-}
+
+
