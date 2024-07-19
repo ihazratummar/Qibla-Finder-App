@@ -145,7 +145,7 @@ fun CompassView(
                     drawImage(
                         image = needleBitmap,
                         topLeft = Offset(
-                            compassCenter.x - needleBitmap.width / 2,
+                            compassCenter.x - needleBitmap.width / 1.8f,
                             needleStartY
                         )
                     )
@@ -155,7 +155,7 @@ fun CompassView(
                         image = qiblaIconBitmap,
                         topLeft = Offset(
                             compassCenter.x - qiblaIconBitmap.width / 2,
-                            compassCenter.y - compassRadius - qiblaIconBitmap.height / 1
+                            compassCenter.y - compassRadius - qiblaIconBitmap.height / 1.1f
                         ),
                     )
                 }
