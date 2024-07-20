@@ -13,10 +13,12 @@ activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 lifecycleRuntimeKtxVersion = "2.8.3"
 lifecycleViewmodelComposeVersion = "2.8.3"
+material3 = "1.2.1"
 playServicesLocation = "21.3.0"
 ksp = "2.0.0-1.0.22"
 navigationCompose = "2.7.7"
 material3Android = "1.2.1"
+androidthings = "1.0"
 
 [libraries]
 androidx-material3 = { module = "androidx.compose.material3:material3" }
@@ -42,8 +44,10 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+androidthings = { group = "com.google.android.things", name = "androidthings", version.ref = "androidthings" }
 
 
 [plugins]

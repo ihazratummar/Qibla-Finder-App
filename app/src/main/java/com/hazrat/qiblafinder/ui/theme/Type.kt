@@ -2,9 +2,11 @@ package com.hazrat.qiblafinder.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.hazrat.qiblafinder.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -31,4 +33,22 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+)
+
+val AlQalam = FontFamily(
+    fonts = listOf(
+        Font(R.font.al_qalam)
+    )
+)
+
+val Arabic = FontFamily(
+    fonts = listOf(
+        Font(R.font.arabicislamic)
+    )
+)
+
+val Hidaya = FontFamily(
+    fonts = listOf(
+        Font(R.font.hidayatullah)
+    )
 )

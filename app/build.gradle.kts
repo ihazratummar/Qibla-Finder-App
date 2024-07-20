@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
+    id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -63,6 +64,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose.v281)
     implementation(libs.play.services.location)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidthings)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)
     androidTestImplementation(libs.androidx.espresso.core.v351)
@@ -71,6 +73,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.foundation)
+    implementation (libs.material3)
 
     //Dagger Hilt
     implementation(libs.hilt.android)
