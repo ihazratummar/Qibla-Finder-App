@@ -34,7 +34,7 @@ To get a local copy up and running, follow these steps.
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/qibla-finder.git
+   https://github.com/ihazratummar/Qibla-Finder-App.git
 
 2. Open the project in Android Studio.
 3. Build and run the app on your Android device or emulator.
